@@ -129,7 +129,7 @@ def main_menu():
             university.display_totals()
         elif choice == '5':
             print("Exiting the program.")
-            break
+            break  # خروج من الحلقة والتوقف عن العمل
         else:
             print("Invalid choice. Please choose a valid option.")
 
@@ -139,5 +139,3 @@ university = University()
 
 # تشغيل البرنامج
 main_menu()
-
-
