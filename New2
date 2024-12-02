@@ -93,49 +93,53 @@ class University:
         print(f"Total people: {Person.total_people}")
 
 
-# بيانات جاهزة للطلاب والأساتذة
-def add_predefined_students():
-    # إنشاء بيانات طلاب جاهزة
-    student1 = Student("Alice", 20, "S001", [90, 85, 88], ["Math", "Science"])
-    student2 = Student("Bob", 22, "S002", [78, 82, 80], ["English", "History"])
-    university.add_person(student1)
-    university.add_person(student2)
+def get_student_input():
+    name = input("Enter student's name: ")
+    age = int(input("Enter student's age: "))
+    student_id = input("Enter student's ID: ")
+    grades = list(map(int, input("Enter student's grades (comma-separated): ").split(',')))
+    courses = input("Enter courses (comma-separated): ").split(',')
+    return Student(name, age, student_id, grades, courses)
 
 
-def add_predefined_professors():
-    # إنشاء بيانات أساتذة جاهزة
-    professor1 = Professor("Dr. Smith", 45, "P001", ["Math", "Physics"])
-    professor2 = Professor("Dr. Johnson", 50, "P002", ["History", "Philosophy"])
-    university.add_person(professor1)
-    university.add_person(professor2)
+def get_professor_input():
+    name = input("Enter professor's name: ")
+    age = int(input("Enter professor's age: "))
+    professor_id = input("Enter professor's ID: ")
+    subjects = input("Enter subjects taught by professor (comma-separated): ").split(',')
+    return Professor(name, age, professor_id, subjects)
 
 
 def main_menu():
     while True:
-        print("\n1. Add Predefined Students")
-        print("2. Add Predefined Professors")
+        print("\n1. Add a Student")
+        print("2. Add a Professor")
         print("3. Display All People")
         print("4. Display Totals")
         print("5. Exit")
         choice = input("Choose an option (1-5): ")
 
         if choice == '1':
-            add_predefined_students()
+            student = get_student_input()
+            university.add_person(student)
         elif choice == '2':
-            add_predefined_professors()
+            professor = get_professor_input()
+            university.add_person(professor)
         elif choice == '3':
             university.display_all_people()
         elif choice == '4':
             university.display_totals()
         elif choice == '5':
             print("Exiting the program.")
-            break  # خروج من الحلقة والتوقف عن العمل
+            break
         else:
             print("Invalid choice. Please choose a valid option.")
 
 
-# إنشاء كائن للجامعة
+# Create university object
 university = University()
 
-# تشغيل البرنامج
+# Run the program
 main_menu()
+
+
