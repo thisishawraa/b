@@ -1,0 +1,171 @@
+from abc import ABC, abstractmethod
+
+class Person(ABC):  # استخدام ABC هنا
+    total_people = 0
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        Person.total_people += 1
+
+    @abstractmethod
+    def display_info(self):  # الدالة abstract (مجرّدة) في الفئة الأساسية
+        pass
+
+    def __str__(self):
+        return f"Name: {self.name}, Age: {self.age}"
+
+    def __repr__(self):
+        return f"Person(name={self.name}, age={self.age})"
+
+    def __eq__(self, other):
+        if isinstance(other, Person):
+            return self.name == other.name and self.age == other.age
+        return False
+
+
+class Course:
+    def __init__(self, course_name):
+        self.course_name = course_name
+
+    def __str__(self):
+        return f"Course: {self.course_name}"
+
+
+class Address:
+    def __init__(self, street, city, zip_code):
+        self.street = street
+        self.city = city
+        self.zip_code = zip_code
+
+    def __str__(self):
+        return f"{self.street}, {self.city}, {self.zip_code}"
+
+
+class Student(Person):
+    total_students = 0
+
+    def __init__(self, name, age, student_id, grades, address, courses=None):
+        super().__init__(name, age)
+        self.student_id = student_id
+        self.grades = grades
+        self.address = address  # Composition: Address هو جزء من Student
+        self.courses = [Course(course) for course in (courses or [])]  # Composition: Courses جزء من Student
+        Student.total_students += 1
+
+    def display_info(self):  # تنفيذ display_info في فئة Student
+        courses = ', '.join([course.course_name for course in self.courses]) if self.courses else "No courses"
+        return f"Student: {self.name}, Age: {self.age}, ID: {self.student_id}, Address: {self.address}, Courses: {courses}, Grades: {self.grades}"
+
+    def add_course(self, course_name):
+        self.courses.append(Course(course_name))  # استخدام Composition لإضافة كورسات جديدة
+        print(f"Added {course_name} to {self.name}'s courses.")
+
+    @classmethod
+    def total_students_count(cls):
+        return f"Total students: {cls.total_students}"
+
+
+class Professor(Person):
+    total_professors = 0
+
+    def __init__(self, name, age, professor_id, subjects=None, address=None):
+        super().__init__(name, age)
+        self.professor_id = professor_id
+        self.address = address  # Aggregation: Address يمكن أن يكون مشترك بين عدة Professors
+        self.subjects = subjects if subjects else []
+        Professor.total_professors += 1
+
+    def assign_subject(self, subject):
+        self.subjects.append(subject)
+        print(f"{self.name} has been assigned to teach {subject}")
+
+    def display_info(self):  # تنفيذ display_info في فئة Professor
+        subject_list = ', '.join(self.subjects) if self.subjects else "No subjects assigned"
+        return f"Professor: {self.name}, Age: {self.age}, ID: {self.professor_id}, Subjects: {subject_list}, Address: {self.address}"
+
+    @classmethod
+    def total_professors_count(cls):
+        return f"Total professors: {cls.total_professors}"
+
+
+class University:
+    def __init__(self):
+        self.people = []
+
+    def add_person(self, person):
+        if isinstance(person, Person):
+            self.people.append(person)
+            print(f"{person.name} has been added to the university.")
+        else:
+            print("Only instances of Person or its subclasses can be added.")
+
+    def display_all_people(self):
+        print("\nAll People in University:")
+        if self.people:
+            for person in self.people:
+                print(person.display_info())  # Polymorphism
+        else:
+            print("No people in university.")
+
+    def display_totals(self):
+        print(Student.total_students_count())
+        print(Professor.total_professors_count())
+        print(f"Total people: {Person.total_people}")
+
+
+def add_student():
+    name = input("Enter student's name: ")
+    age = int(input("Enter student's age: "))
+    student_id = input("Enter student's ID: ")
+    grades = list(map(int, input("Enter student's grades (comma separated): ").split(',')))
+    street = input("Enter student's street: ")
+    city = input("Enter student's city: ")
+    zip_code = input("Enter student's zip code: ")
+    address = Address(street, city, zip_code)
+    student = Student(name, age, student_id, grades, address)
+    university.add_person(student)
+
+
+def add_professor():
+    name = input("Enter professor's name: ")
+    age = int(input("Enter professor's age: "))
+    professor_id = input("Enter professor's ID: ")
+    subjects = input("Enter subjects taught (comma separated): ").split(',')
+    street = input("Enter professor's street: ")
+    city = input("Enter professor's city: ")
+    zip_code = input("Enter professor's zip code: ")
+    address = Address(street, city, zip_code)
+    professor = Professor(name, age, professor_id, subjects, address)
+    university.add_person(professor)
+
+
+def main_menu():
+    while True:
+        print("\n1. Add Student")
+        print("2. Add Professor")
+        print("3. Display All People")
+        print("4. Display Totals")
+        print("5. Exit")
+        choice = input("Choose an option (1-5): ")
+
+        if choice == '1':
+            add_student()
+        elif choice == '2':
+            add_professor()
+        elif choice == '3':
+            university.display_all_people()
+        elif choice == '4':
+            university.display_totals()
+        elif choice == '5':
+            print("Exiting the program.")
+            break
+        else:
+            print("Invalid choice. Please choose a valid option.")
+
+
+# Create university instance
+university = University()
+
+# Run the menu
+main_menu()
