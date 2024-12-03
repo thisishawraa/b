@@ -1,0 +1,139 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+# الألوان والتنسيقات
+bg_color = "#FFEBEE"
+fg_color = "#000000"
+highlight_color = "#D32F2F"
+button_color = "#FFCDD2"
+entry_bg_color = "#FFFFFF"
+entry_fg_color = "#000000"
+header_bg_color = "#FFCDD2"
+header_fg_color = "#000000"
+
+# الأيام والفترات الزمنية
+days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+times = ["00:00-02:00", "02:00-04:00", "04:00-06:00", "06:00-08:00", "08:00-10:00",
+         "10:00-12:00", "12:00-14:00", "14:00-16:00", "16:00-18:00", "18:00-20:00",
+         "20:00-22:00", "22:00-00:00"]
+
+# إنشاء الجدول الفارغ
+timetable = [["" for _ in range(len(times))] for _ in range(len(days))]
+
+# وظيفة عرض الجدول
+def print_timetable():
+    timetable_window = tk.Toplevel(root)
+    timetable_window.title("Timetable")
+    timetable_window.configure(bg=bg_color)
+    timetable_window.geometry("1000x700")
+
+    canvas = tk.Canvas(timetable_window, bg=bg_color)
+    canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    h_scrollbar = tk.Scrollbar(timetable_window, orient=tk.HORIZONTAL, command=canvas.xview)
+    h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+
+    scrollbar = tk.Scrollbar(timetable_window, orient=tk.VERTICAL, command=canvas.yview)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+    canvas.configure(yscrollcommand=scrollbar.set, xscrollcommand=h_scrollbar.set)
+    canvas.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+    frame = tk.Frame(canvas, bg=bg_color)
+    canvas.create_window((0, 0), window=frame, anchor="nw")
+
+    ttk.Label(frame, text="Days / Times", background=header_bg_color,
+              foreground=header_fg_color, font=('Helvetica', 14, 'bold')).grid(row=0, column=0, padx=10, pady=10)
+
+    for j, time in enumerate(times):
+        ttk.Label(frame, text=time, background=header_bg_color,
+                  foreground=header_fg_color, font=('Helvetica', 14, 'bold')).grid(row=0, column=j + 1, padx=10, pady=10)
+
+    for i, day in enumerate(days):
+        ttk.Label(frame, text=day, background=header_bg_color,
+                  foreground=header_fg_color, font=('Helvetica', 14, 'bold')).grid(row=i + 1, column=0, padx=10, pady=10)
+        for j, course in enumerate(timetable[i]):
+            ttk.Label(frame, text=course if course else "Empty", background=bg_color,
+                      foreground=fg_color, font=('Helvetica', 14)).grid(row=i + 1, column=j + 1, padx=10, pady=10)
+
+# إضافة دورة
+def add_course():
+    day = day_var.get()
+    time_slot = time_var.get()
+    course = course_var.get().strip()
+
+    if not course:
+        messagebox.showwarning("Warning", "Please enter a course name.")
+        return
+
+    try:
+        day_index = days.index(day)
+        time_index = times.index(time_slot)
+        if timetable[day_index][time_index] == "":
+            timetable[day_index][time_index] = course
+            messagebox.showinfo("Success", f"Course '{course}' added to {day} at {time_slot}.")
+        else:
+            messagebox.showwarning("Warning", f"Slot already occupied by '{timetable[day_index][time_index]}'.")
+    except ValueError:
+        messagebox.showerror("Error", "Invalid day or time slot. Please try again.")
+
+# إزالة دورة
+def remove_course():
+    day = day_var.get()
+    time_slot = time_var.get()
+
+    try:
+        day_index = days.index(day)
+        time_index = times.index(time_slot)
+        if timetable[day_index][time_index] != "":
+            removed_course = timetable[day_index][time_index]
+            timetable[day_index][time_index] = ""
+            messagebox.showinfo("Success", f"Course '{removed_course}' removed from {day} at {time_slot}.")
+        else:
+            messagebox.showwarning("Warning", f"No course scheduled at {day} {time_slot}.")
+    except ValueError:
+        messagebox.showerror("Error", "Invalid day or time slot. Please try again.")
+
+# البحث عن دورة
+def search_course():
+    course = course_var.get().strip()
+
+    if not course:
+        messagebox.showwarning("Warning", "Please enter a course name to search.")
+        return
+
+    found = False
+    for i, day in enumerate(days):
+        for j, time in enumerate(times):
+            if timetable[i][j] == course:
+                messagebox.showinfo("Found", f"Course '{course}' found on {day} at {time}.")
+                found = True
+                return
+    if not found:
+        messagebox.showinfo("Not Found", f"Course '{course}' not found in the timetable.")
+
+# إنشاء واجهة المستخدم
+root = tk.Tk()
+root.title("Timetable Manager")
+root.geometry("600x400")
+root.configure(bg=bg_color)
+
+day_var = tk.StringVar(value=days[0])
+time_var = tk.StringVar(value=times[0])
+course_var = tk.StringVar()
+
+ttk.Label(root, text="Day:", background=bg_color, foreground=fg_color).pack(pady=5)
+ttk.Combobox(root, textvariable=day_var, values=days).pack(pady=5)
+
+ttk.Label(root, text="Time Slot:", background=bg_color, foreground=fg_color).pack(pady=5)
+ttk.Combobox(root, textvariable=time_var, values=times).pack(pady=5)
+
+ttk.Label(root, text="Course Name:", background=bg_color, foreground=fg_color).pack(pady=5)
+tk.Entry(root, textvariable=course_var, bg=entry_bg_color, fg=entry_fg_color).pack(pady=5)
+
+ttk.Button(root, text="Add Course", command=add_course).pack(pady=5)
+ttk.Button(root, text="Remove Course", command=remove_course).pack(pady=5)
+ttk.Button(root, text="Search Course", command=search_course).pack(pady=5)
+ttk.Button(root, text="Show Timetable", command=print_timetable).pack(pady=5)
+
+root.mainloop()
