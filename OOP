@@ -1,0 +1,161 @@
+from abc import ABC, abstractmethod
+
+# Base Class: Person
+class Person:
+    total_people = 0
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        Person.total_people += 1
+
+    def __str__(self):
+        return f"Name: {self.name}, Age: {self.age}"
+
+    def __repr__(self):
+        return f"Person(name={self.name}, age={self.age})"
+
+
+# Course Class
+class Course:
+    def __init__(self, course_name):
+        self.course_name = course_name
+
+    def __str__(self):
+        return f"Course: {self.course_name}"
+
+
+# University Class with Interface
+class University:
+    class UniversityMember(ABC):
+        @abstractmethod
+        def display_info(self):
+            pass
+
+        @abstractmethod
+        def add_person(self, person):
+            pass
+
+    def __init__(self):
+        self.people = []
+
+    def add_person(self, person):
+        if isinstance(person, Person):
+            self.people.append(person)
+            print(f"{person.name} has been added to the university.")
+        else:
+            print("Only instances of Person or its subclasses can be added.")
+
+    def display_all_people(self):
+        print("\nAll People in University:")
+        if self.people:
+            for person in self.people:
+                print(person.display_info())
+        else:
+            print("No people in university.")
+
+    def display_totals(self):
+        print(Student.total_students_count())
+        print(Professor.total_professors_count())
+        print(f"Total people: {Person.total_people}")
+
+
+# Student Class inheriting from Person and implementing UniversityMember
+class Student(Person, University.UniversityMember):
+    total_students = 0
+
+    def __init__(self, name, age, student_id, grades, courses=None):
+        super().__init__(name, age)
+        self.student_id = student_id
+        self.grades = grades
+        self.courses = [Course(course) for course in (courses or [])]
+        Student.total_students += 1
+
+    def display_info(self):
+        courses = ', '.join([course.course_name for course in self.courses]) if self.courses else "No courses"
+        return f"Student: {self.name}, Age: {self.age}, ID: {self.student_id}, Courses: {courses}, Grades: {self.grades}"
+
+    @classmethod
+    def total_students_count(cls):
+        return f"Total students: {cls.total_students}"
+
+    def add_person(self, person):
+        print(f"Adding Student: {person}")
+
+
+# Professor Class inheriting from Person and implementing UniversityMember
+class Professor(Person, University.UniversityMember):
+    total_professors = 0
+
+    def __init__(self, name, age, professor_id, subjects=None):
+        super().__init__(name, age)
+        self.professor_id = professor_id
+        self.subjects = subjects if subjects else []
+        Professor.total_professors += 1
+
+    def assign_subject(self, subject):
+        self.subjects.append(subject)
+        print(f"{self.name} has been assigned to teach {subject}")
+
+    def display_info(self):
+        subject_list = ', '.join(self.subjects) if self.subjects else "No subjects assigned"
+        return f"Professor: {self.name}, Age: {self.age}, ID: {self.professor_id}, Subjects: {subject_list}"
+
+    @classmethod
+    def total_professors_count(cls):
+        return f"Total professors: {cls.total_professors}"
+
+    def add_person(self, person):
+        print(f"Adding Professor: {person}")
+
+
+# Input Functions
+def get_student_input():
+    name = input("Enter student's name: ")
+    age = int(input("Enter student's age: "))
+    student_id = input("Enter student's ID: ")
+    grades = list(map(int, input("Enter student's grades (comma-separated): ").split(',')))
+    courses = input("Enter courses (comma-separated): ").split(',')
+    return Student(name, age, student_id, grades, courses)
+
+
+def get_professor_input():
+    name = input("Enter professor's name: ")
+    age = int(input("Enter professor's age: "))
+    professor_id = input("Enter professor's ID: ")
+    subjects = input("Enter subjects taught by professor (comma-separated): ").split(',')
+    return Professor(name, age, professor_id, subjects)
+
+
+# Main Menu
+def main_menu():
+    while True:
+        print("\n1. Add a Student")
+        print("2. Add a Professor")
+        print("3. Display All People")
+        print("4. Display Totals")
+        print("5. Exit")
+        choice = input("Choose an option (1-5): ")
+
+        if choice == '1':
+            student = get_student_input()
+            university.add_person(student)
+        elif choice == '2':
+            professor = get_professor_input()
+            university.add_person(professor)
+        elif choice == '3':
+            university.display_all_people()
+        elif choice == '4':
+            university.display_totals()
+        elif choice == '5':
+            print("Exiting the program.")
+            break
+        else:
+            print("Invalid choice. Please choose a valid option.")
+
+
+# Create university object
+university = University()
+
+# Run the program
+main_menu()
