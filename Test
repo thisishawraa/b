@@ -1,0 +1,22 @@
+class Matrix:
+    def __init__(self, values):
+        self.values = values
+
+    def __add__(self, other):
+        # جمع المصفوفات
+        result = [
+            [self.values[i][j] + other.values[i][j] for j in range(len(self.values[0]))]
+            for i in range(len(self.values))
+        ]
+        return Matrix(result)
+
+    def __str__(self):
+        # تمثيل المصفوفة بشكل جميل
+        return "\n".join(str(row) for row in self.values)
+
+# إنشاء مصفوفتين
+m1 = Matrix([[1, 2], [3, 4]])
+m2 = Matrix([[5, 6], [7, 8]])
+
+# جمع المصفوفتين وعرض النتيجة
+print(m1 + m2)
