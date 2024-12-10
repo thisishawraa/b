@@ -1,17 +1,19 @@
-class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+class Fraction:
+    def __init__(self, numerator, denominator):
+        self.numerator = numerator  # البسط (العدد العلوي)
+        self.denominator = denominator  # المقام (العدد السفلي)
+
+    def __add__(self, other):
+        # جمع الكسور
+        new_numerator = self.numerator * other.denominator + other.numerator * self.denominator
+        new_denominator = self.denominator * other.denominator
+        return Fraction(new_numerator, new_denominator)  # إرجاع كسر جديد
 
     def __str__(self):
-        # للطباعة العادية
-        return f"Person: {self.name}, Age: {self.age}"
+        return f"{self.numerator}/{self.denominator}"  # طباعة الكسر في الشكل "بسط/مقام"
 
-    def __repr__(self):
-        # للطباعة الفنية (تمثيل الكائن)
-        return f"Person('{self.name}', {self.age})"
-
-# إنشاء شخص واختبار الطباعة
-person = Person("Alice", 30)
-print(person)         # Person: Alice, Age: 30
-print(repr(person))   # Person('Alice', 30)
+# اختبار الكود
+fraction1 = Fraction(1, 2)  # كسر 1/2
+fraction2 = Fraction(2, 3)  # كسر 2/3
+result = fraction1 + fraction2  # جمع الكسور
+print(result)  # طباعة النتيجة: 7/6
