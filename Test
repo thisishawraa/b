@@ -1,22 +1,17 @@
-class SmartList:
-    def __init__(self, items):
-        self.items = items
-
-    def __len__(self):
-        return len(self.items)
-
-    def __getitem__(self, index):
-        return self.items[index]
-
-    def __setitem__(self, index, value):
-        self.items[index] = value
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
     def __str__(self):
-        return f"SmartList: {self.items}"
+        # للطباعة العادية
+        return f"Person: {self.name}, Age: {self.age}"
 
-# إنشاء قائمة واختبار العمليات
-slist = SmartList([10, 20, 30])
-print(len(slist))       # 3
-print(slist[1])         # 20
-slist[1] = 50
-print(slist)         # SmartList: [10, 50, 30])
+    def __repr__(self):
+        # للطباعة الفنية (تمثيل الكائن)
+        return f"Person('{self.name}', {self.age})"
+
+# إنشاء شخص واختبار الطباعة
+person = Person("Alice", 30)
+print(person)         # Person: Alice, Age: 30
+print(repr(person))   # Person('Alice', 30)
