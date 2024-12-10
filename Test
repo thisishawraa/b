@@ -1,22 +1,21 @@
-class Matrix:
-    def __init__(self, values):
-        self.values = values
-
-    def __add__(self, other):
-        # جمع المصفوفات
-        result = [
-            [self.values[i][j] + other.values[i][j] for j in range(len(self.values[0]))]
-            for i in range(len(self.values))
-        ]
-        return Matrix(result)
+class Book:
+    def __init__(self, title, author, pages):
+        self.title = title
+        self.author = author
+        self.pages = pages
 
     def __str__(self):
-        # تمثيل المصفوفة بشكل جميل
-        return "\n".join(str(row) for row in self.values)
+        return f"'{self.title}' by {self.author}, {self.pages} pages"
 
-# إنشاء مصفوفتين
-m1 = Matrix([[1, 2], [3, 4]])
-m2 = Matrix([[5, 6], [7, 8]])
+    def __eq__(self, other):
+        return self.pages == other.pages
 
-# جمع المصفوفتين وعرض النتيجة
-print(m1 + m2)
+# إنشاء كتب
+book1 = Book("Python Basics", "John Doe", 300)
+book2 = Book("Learn Python", "Jane Smith", 300)
+book3 = Book("Advanced Python", "Alice Brown", 400)
+
+# مقارنة الكتب
+print(book1)          # 'Python Basics' by John Doe, 300 pages
+print(book1 == book2) # True (نفس عدد الصفحات)
+print(book1 == book3) # False)
