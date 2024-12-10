@@ -1,21 +1,22 @@
-class Book:
-    def __init__(self, title, author, pages):
-        self.title = title
-        self.author = author
-        self.pages = pages
+class SmartList:
+    def __init__(self, items):
+        self.items = items
+
+    def __len__(self):
+        return len(self.items)
+
+    def __getitem__(self, index):
+        return self.items[index]
+
+    def __setitem__(self, index, value):
+        self.items[index] = value
 
     def __str__(self):
-        return f"'{self.title}' by {self.author}, {self.pages} pages"
+        return f"SmartList: {self.items}"
 
-    def __eq__(self, other):
-        return self.pages == other.pages
-
-# إنشاء كتب
-book1 = Book("Python Basics", "John Doe", 300)
-book2 = Book("Learn Python", "Jane Smith", 300)
-book3 = Book("Advanced Python", "Alice Brown", 400)
-
-# مقارنة الكتب
-print(book1)          # 'Python Basics' by John Doe, 300 pages
-print(book1 == book2) # True (نفس عدد الصفحات)
-print(book1 == book3) # False)
+# إنشاء قائمة واختبار العمليات
+slist = SmartList([10, 20, 30])
+print(len(slist))       # 3
+print(slist[1])         # 20
+slist[1] = 50
+print(slist)         # SmartList: [10, 50, 30])
