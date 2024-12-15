@@ -1,13 +1,22 @@
-class Student:
-    def __init__(self, name, grades):
-        self.name = name
-        self.grades = grades
+class Course:
+    def __init__(self, course_name, instructor):
+        self.course_name = course_name
+        self.instructor = instructor
 
-    def check_status(self):
-        return "Pass" if self.grades >= 50 else "Fail"
+    def get_location(self):
+        raise NotImplementedError("Subclasses must implement get_location.")
 
-# إنشاء كائنين وطباعة النتائج
-student1 = Student("Ali", 85)
-student2 = Student("Sara", 45)
-print(student1.name, student1.check_status())
-print(student2.name, student2.check_status())
+class OnlineCourse(Course):
+    def get_location(self):
+        return "www.onlinecourse.com"
+
+class OfflineCourse(Course):
+    def get_location(self):
+        return "123 College Street"
+
+# Example usage
+online_course = OnlineCourse("Python", "John Doe")
+offline_course = OfflineCourse("Data Science", "Jane Smith")
+
+print(f"Online course location: {online_course.get_location()}")
+print(f"Offline course location: {offline_course.get_location()}")
