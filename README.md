@@ -1,22 +1,21 @@
-class Course:
-    def __init__(self, course_name, instructor):
-        self.course_name = course_name
-        self.instructor = instructor
+def linear_search(arr, target):
+    for index, element in enumerate(arr):  # المرور على كل عنصر في القائمة
+        if element == target:  # إذا كان العنصر يساوي القيمة المطلوبة
+            return index  # إرجاع موقع العنصر
+    return -1  # إرجاع -1 في حال عدم العثور على العنصر
 
-    def get_location(self):
-        raise NotImplementedError("Subclasses must implement get_location.")
+# القائمة
+array = [5, 3, 8, 4, 2]
 
-class OnlineCourse(Course):
-    def get_location(self):
-        return "www.onlinecourse.com"
+# تنفيذ البرنامج
+while True:
+    try:
+        target = int(input("أدخل القيمة المراد البحث عنها: "))  # طلب إدخال قيمة من المستخدم
+        result = linear_search(array, target)  # استدعاء الدالة
 
-class OfflineCourse(Course):
-    def get_location(self):
-        return "123 College Street"
-
-# Example usage
-online_course = OnlineCourse("Python", "John Doe")
-offline_course = OfflineCourse("Data Science", "Jane Smith")
-
-print(f"Online course location: {online_course.get_location()}")
-print(f"Offline course location: {offline_course.get_location()}")
+        if result != -1:
+            print(f"العنصر {target} موجود في الموقع {result}.")
+        else:
+            print(f"العنصر {target} غير موجود في القائمة.")
+    except ValueError:
+        print("من فضلك أدخل عددًا صحيحًا.")  # معالجة إدخال غير صحيح
