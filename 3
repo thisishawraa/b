@@ -1,0 +1,12 @@
+import hashlib
+
+def hash_SHA256(data):
+    return hashlib.sha256(data.encode()).hexdigest()
+
+# تجربة التجزئة
+message = "This is a message to be hashed using SHA-256."
+hashed_message = hash_SHA256(message)
+
+print("=== SHA-256 Hashing ===")
+print(f"Original text: {message}")
+print(f"Hash: {hashed_message}")
